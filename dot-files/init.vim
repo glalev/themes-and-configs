@@ -55,12 +55,13 @@ autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTr
 
 " used to change sub-window on focus
 :noremap <Tab> <C-w>
-" copy to the global clipboard
-:noremap <S-y> "+y
-" cut to to global clipboard
-:noremap <S-x> "+x
-" cut to the global clipboard
-:noremap <S-p> "+p
+
+" to paste to the global clipboard in only in normal mode
+:nnoremap <C-v> "+p
+" ctrl + x to cut to to global clipboard
+:noremap <C-x> "+x
+" ctrl + c to copy to the global clipboard
+:noremap <C-c> "+y 
 
 " SHORT KEYS END ========================================
  
