@@ -128,3 +128,14 @@ export NVM_DIR="$HOME/.nvm"
 
 # seting the bat theme to Nord
 export BAT_THEME="Nord"
+
+# sets Fzf to use ripgrep
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs -g "!{node_modules,.git}"'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+## In order for this to work a synth-shell must be installed - see https://github.com/andresgongora/synth-shell
+##-----------------------------------------------------
+## synth-shell-prompt.sh
+if [ -f /home/glalev/.config/synth-shell/synth-shell-prompt.sh ] && [ -n "$( echo $- | grep i )" ]; then
+  source /home/glalev/.config/synth-shell/synth-shell-prompt.sh
+fi
