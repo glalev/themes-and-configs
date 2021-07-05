@@ -24,6 +24,6 @@ then
 elif [ "$SECONDARY" == "$CHOICE" ];
 then
     xrandr --output DP-2 --auto --scale 1x1;
-    xrandr --output DP-0 --auto --right-of DP-2 --rotate left --scale 2x2;
+    xrandr --output DP-0 --auto --right-of DP-2 --rotate left --scale 1.5x1.5;
     xrandr --output HDMI-0 --off;
 fi
