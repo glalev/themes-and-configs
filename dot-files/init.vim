@@ -8,9 +8,11 @@ Plug 'itchyny/lightline.vim', {'colorscheme': 'nord'} "plugin for status bar
 Plug 'preservim/nerdtree'
 " Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
-Plug 'preservim/nerdcommenter'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " installes fzf for a fuzzy file search
+" Plug 'preservim/nerdcommenter'
+Plug 'tomtom/tcomment_vim' " plugin for commenting/uncommenting 
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " installs fzf for a fuzzy file search
 Plug 'junegunn/fzf.vim'
+Plug 'ap/vim-css-color' " preview css colors
 " Plug 'dense-analysis/ale'
 " Plug 'jiangmiao/auto-pairs' " inserts or delete matching brackets, quotes, etc.
 " Plug 'prettier/vim-prettier', { 'do': 'npm install' } " adds auto formating for Javascript
@@ -18,7 +20,8 @@ Plug 'junegunn/fzf.vim'
 call plug#end()
 
 let g:coc_global_extensions = [
-      \ 'coc-tsserver',
+      \'coc-tsserver',
+      \'coc-json',
       \'coc-css',
       \'coc-html',
       \'coc-pairs',
@@ -44,11 +47,11 @@ let g:NERDSpaceDelims = 1
 autocmd BufWinEnter * silent NERDTreeMirror
 
 " auto refresh NerdTree when a new file is  created
-autocmd BufWritePost * NERDTreeFocus | execute 'normal R' | wincmd p
+" autocmd BufWritePost * NERDTreeFocus | execute 'normal R' | wincmd p
 
 " Exit Vim if NERDTree is the only window left.
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
-    \ quit | endif
+     \ quit | endif
 
 " adds a command that searches within the whole project but ignores node_modules, modules, locales, and .git folders
 command! -bang -nargs=* Rgp call fzf#vim#grep('rg --column --line-number --no-heading --color=always --smart-case -g "!{.git/*,node_modules/*}" '.shellescape(<q-args>), 1,  fzf#vim#with_preview(), <bang>0)
@@ -76,6 +79,11 @@ inoremap <silent><expr> <TAB>
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
 " Use <c-space> to trigger completion.
 if has('nvim')
@@ -123,6 +131,8 @@ noremap <C-c> "+y
 noremap <Leader>f :Files<CR>
 " shows all active buffers
 noremap <Leader>b :Buffers<CR>
+" shows all active windows
+noremap <Leader>w :Windows<CR>
 " does a fuzzy search within the whole project
 noremap <Leader>r :Rgp<CR>
 " autoformats the code
