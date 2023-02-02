@@ -78,6 +78,9 @@ alias ls='lsd'
 # using bat instead of cat
 alias cat='bat'
 
+# adds a prompt before deleting anything, -f will overwrite this 
+alias rm='rm -I'
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
