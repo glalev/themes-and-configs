@@ -72,14 +72,28 @@ xterm*|rxvt*)
     ;;
 esac
 
+alias update='sudo nala update && sudo nala upgrade && flatpak update'
 # using more fancy looking lsd instead of ls
 alias ls='lsd'
 
-# using bat instead of cat
-alias cat='bat'
+alias :q='exit'
+alias :wq='exit'
 
-# adds a prompt before deleting anything, -f will overwrite this 
-alias rm='rm -I'
+# opens brave browser instance with disabled cors and other security functionalities, so used with caution
+alias nocorsbrave='/usr/bin/brave-browser --disable-web-security --user-data-dir="/home/glalev/Documents/no-cors-brave-data-dir"'
+
+# using bat instead of cat
+alias cat='batcat'
+
+#fetching the weather report
+alias weather='curl wttr.in/sofia'
+
+alias discu='ncdu'
+alias cl='clear'
+
+alias gonvim='nvim --listen /tmp/godothost .'
+alias towebp='for f in *.png; do cwebp -q 85 -mt $f -o ${f%.*}.webp; done'
+alias towav='for f in *.aif; do ffmpeg -i "$f" "${f%.aif}.wav"; done'
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -145,3 +159,6 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 if [ -f /home/glalev/.config/synth-shell/synth-shell-prompt.sh ] && [ -n "$( echo $- | grep i )" ]; then
   source /home/glalev/.config/synth-shell/synth-shell-prompt.sh
 fi
+
+# set the vim key bindings
+set -o vi
