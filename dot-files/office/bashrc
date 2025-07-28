@@ -72,6 +72,9 @@ xterm*|rxvt*)
     ;;
 esac
 
+# outputs the content of the clipboard
+alias pasteclip='xclip -selection clipboard -o'
+alias dockerstopall='docker stop $(docker ps -a -q)'
 alias update='sudo nala update && sudo nala upgrade && flatpak update'
 # using more fancy looking lsd instead of ls
 alias ls='lsd'
@@ -79,7 +82,7 @@ alias ls='lsd'
 alias :q='exit'
 alias :wq='exit'
 
-# opens brave browser instance with disabled cors and other security functionalities, so used with caution
+# opens brave browser instance with disabled cors and other security functionalities, so use with caution
 alias nocorsbrave='/usr/bin/brave-browser --disable-web-security --user-data-dir="/home/glalev/Documents/no-cors-brave-data-dir"'
 
 # using bat instead of cat
@@ -170,3 +173,6 @@ set -o vi
 [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 eval "$(atuin init bash)"
 eval "$(zoxide init --cmd cd bash)"
+eval "$(fzf --bash)"
+
+alias bl='gb build-menu -l';
