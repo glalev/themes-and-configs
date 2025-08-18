@@ -1,0 +1,59 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific environment
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+# export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+export MANPAGER='nvim +Man!'
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+
+
+# outputs the content of the clipboard
+alias pasteclip='xclip -selection clipboard -o'
+alias dockerstopall='docker stop $(docker ps -a -q)'
+alias vim="nvim"
+alias cat="bat"
+alias ls="lsd"
+alias :q="exit"
+alias :wq="exit"
+alias gb="~/Documents/projects/elysium/game-builder/main.sh"
+alias update="sudo dnf upgrade --refresh; flatpak update"
+alias towebp='for f in *.png; do cwebp -q 85 -mt $f -o ${f%.*}.webp; done'
+alias towav='for f in *.aif; do ffmpeg -i "$f" "${f%.aif}.wav"; done'
+#fetching the weather report
+alias weather='curl wttr.in/sofia'
+
+# sets Fzf to use ripgrep
+export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs -g "!{node_modules,.git}"'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# set the vim key bindings
+set -o vi
+
+# not sure what this do
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+eval "$(zoxide init --cmd cd bash)"
+eval "$(fzf --bash)"
+export BAT_THEME="TwoDark"
+
