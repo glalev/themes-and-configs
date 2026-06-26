@@ -1,14 +1,17 @@
-# .bashrc
-
 # Source global definitions
 if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
+# Use bash-completion, if available
+[[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
+    . /usr/share/bash-completion/bash_completion
+
 # User specific environment
 if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
+
 export PATH
 # export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
@@ -27,6 +30,11 @@ if [ -d ~/.bashrc.d ]; then
 fi
 unset rc
 
+set_tab_title() {
+    printf '\033]0;%s\007' "${PWD##*/}"
+}
+
+PROMPT_COMMAND="set_tab_title${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 
 # outputs the content of the clipboard
 alias pasteclip='xclip -selection clipboard -o'
@@ -36,12 +44,14 @@ alias cat="bat"
 alias ls="lsd"
 alias :q="exit"
 alias :wq="exit"
-alias gb="~/Documents/projects/elysium/game-builder/main.sh"
-alias update="sudo dnf upgrade --refresh; flatpak update"
+alias update="sudo dnf upgrade --refresh; flatpak update; dnf needs-restarting"
 alias towebp='for f in *.png; do cwebp -q 85 -mt $f -o ${f%.*}.webp; done'
 alias towav='for f in *.aif; do ffmpeg -i "$f" "${f%.aif}.wav"; done'
 #fetching the weather report
 alias weather='curl wttr.in/sofia'
+alias nano='micro'
+alias trash="gio trash"
+alias rm="rm -i"
 
 # sets Fzf to use ripgrep
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --no-ignore-vcs -g "!{node_modules,.git}"'
@@ -56,4 +66,11 @@ set -o vi
 eval "$(zoxide init --cmd cd bash)"
 eval "$(fzf --bash)"
 export BAT_THEME="TwoDark"
+export OPENAI_API_KEY="<put key here>"
 
+
+. "$HOME/.atuin/bin/env"
+
+[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+eval "$(atuin init bash)"
+eval "$(starship init bash)"

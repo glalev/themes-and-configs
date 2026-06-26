@@ -1,4 +1,3 @@
-
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'sheerun/vim-polyglot' "plugin for highlighting
@@ -9,22 +8,23 @@ Plug 'itchyny/lightline.vim', {'colorscheme': 'nord'} "plugin for status bar
 Plug 'preservim/nerdtree'
 " Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
+Plug 'habamax/vim-godot'
 " Plug 'preservim/nerdcommenter'
 Plug 'tomtom/tcomment_vim' " plugin for commenting/uncommenting 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } } " installs fzf for a fuzzy file search
 Plug 'junegunn/fzf.vim'
 Plug 'ap/vim-css-color' " preview css colors
-
-Plug 'habamax/vim-godot'
+Plug 'Mofiqul/adwaita.nvim' "color scheme
+Plug 'tpope/vim-surround' "color scheme
+Plug 'mg979/vim-visual-multi', {'branch': 'master'} "Adds multiple cursors sublime style
 " Plug 'dense-analysis/ale'
 " Plug 'jiangmiao/auto-pairs' " inserts or delete matching brackets, quotes, etc.
 " Plug 'prettier/vim-prettier', { 'do': 'npm install' } " adds auto formating for Javascript
 "
-Plug 'mg979/vim-visual-multi', {'branch': 'master'} "Adds multiple cursors sublime style
-
 call plug#end()
- 
-let g:godot_executable = '/opt/godot/godot.x11.opt.tools.64'
+
+" let g:godot_executable = '~/Applications/custom-godot-bin/godot.x11.opt.tools.64'
+let g:godot_executable = '/home/glalev/.local/bin/godot-official-spine' 
 
 let g:coc_global_extensions = [
       \'coc-tsserver',
@@ -37,7 +37,7 @@ let g:coc_global_extensions = [
 
 " sets the colorscheme of the status bar and ands the git branch
 let g:lightline = {
-      \ 'colorscheme': 'nord',
+      \ 'colorscheme': 'wombat',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
@@ -60,7 +60,7 @@ autocmd BufWinEnter * silent NERDTreeMirror
 autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() |
      \ quit | endif
 
-" adds a command that searches within the whoe project but ignores node_modules, modules, locales, and .git folders
+" adds a command that searches within the whole project but ignores node_modules, modules, locales, and .git folders
 command! -bang -nargs=* Rgp call fzf#vim#grep('rg --column --line-number --no-heading --color=always --smart-case -g "!{.git/*,node_modules/*}" '.shellescape(<q-args>), 1,  fzf#vim#with_preview(), <bang>0)
 
 " adds Vb command to start Visual-Block mode
@@ -78,25 +78,25 @@ else
   set signcolumn=yes
 endif
 
-
-
-" COC mapping ===================================================
-
-" Use tab for trigger completion with characters ahead and navigate.
+" Use tab for trigger completion with characters ahead and navigate
 " NOTE: There's always complete item selected by default, you may want to enable
-" no select by `"suggest.noselect": true` in your configuration file.
+" no select by `"suggest.noselect": true` in your configuration file
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
+" other plugin before putting this into your config
 inoremap <silent><expr> <TAB>
       \ coc#pum#visible() ? coc#pum#next(1) :
       \ CheckBackspace() ? "\<Tab>" :
       \ coc#refresh()
+
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
 " Make <CR> to accept selected completion item or notify coc.nvim to format
-" <C-g>u breaks current undo, please make your own choice.
-inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" <C-g>u breaks current undo, please make your own choice
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+
+inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 
 function! CheckBackspace() abort
   let col = col('.') - 1
@@ -110,61 +110,29 @@ else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
 
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call ShowDocumentation()<CR>
-
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Remap <C-f> and <C-b> for scroll float windows/popups.
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
-
-" Symbol renaming.
-nmap <leader>c <Plug>(coc-rename)
-" Remap for rename current word
-nmap <F2> <Plug>(coc-rename)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-noremap <Leader>d :CocDiagnostics<CR>
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-"========================================================= 
-
+" setlocal foldmethod=expr
+" setlocal tabstop=4
 " SHORT KEYS ===========================================
-                          
+" nnoremap <buffer> <F4> :GodotRunLast<CR>
+" nnoremap <buffer> <F5> :GodotRun<CR>
+" nnoremap <buffer> <F6> :GodotRunCurrent<CR>
+" nnoremap <buffer> <F7> :GodotRunFZF<CR>
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 " alt + j moves the cursor down in 'Insert' mode
 inoremap <M-j> <Down>
 " alt + k moves the cursor up in 'Insert' mode
 inoremap <M-k> <Up>
 " alt + k moves the cursor up in 'Insert' mode
-inoremap <M-h> <Left> " alt + h moves the cursor left in 'Insert' mode
+inoremap <M-h> <Left>
+" alt + h moves the cursor left in 'Insert' mode
 inoremap <M-l> <Right>
 " alt + i escepes the 'Insert' mode back to 'Normal' mode
 inoremap <M-i> <Esc>
-" alt + v escepes the 'Visual' mode back to 'Normal' mode
+" alt + v escepes the 'Visual' mde back to 'Normal' mode
 xnoremap <M-v> <Esc>
 " toggles NERDTree when f4 is pressed
 nnoremap <F4> :NERDTreeToggle<CR>
@@ -179,7 +147,7 @@ noremap <C-s> :w<CR>
 " to paste to the global clipboard in only in normal mode
 nnoremap <C-v> "+p
 " ctrl + x to cut to to global clipboard
-noremap <C-x> "+x
+" noremap <C-x> "+x
 " ctrl + c to copy to the global clipboard
 noremap <C-c> "+y 
 " does a fuzzy file search within the whole project
@@ -202,6 +170,20 @@ noremap <Leader><Space> :noh<CR>
 " toggles the spellcheck
 noremap <Leader>s :set spell!<CR>
 
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+noremap <Leader>d :CocDiagnostics<CR>
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap for rename current word
+nmap <F2> <Plug>(coc-rename)
 " SHORT KEYS END ========================================
  
 set mouse=a
@@ -226,4 +208,11 @@ set updatetime=300
 " Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
 
-colorscheme nord " sets the global colorscheme
+" colorscheme nord " sets the global colorschemeo
+let g:adwaita_darker = v:false " for darker version
+let g:adwaita_disable_cursorline = v:true " to disable cursorline
+let g:adwaita_transparent = v:true " makes the background transparent
+" colorscheme adwaita
+colorscheme habamax
+
+set completeopt=menu,menuone,noselect
